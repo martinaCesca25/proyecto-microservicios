@@ -1,0 +1,3 @@
+GET /api/random/{n} : devuelve n peliculas aleatorias
+
+GET /api/recommend/{criterio} : devuelve una peli que cumpla con criterio (probablemente que sea del mismo genero)

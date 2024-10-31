@@ -1,0 +1,18 @@
+MOVIES          -> Recibe pedidos de peliculas y consulta la database de mongo
+
+RANDOM MOVIES   -> Genera un N aleatorio y pide N peliculas de Movies
+
+HISTORIAL       -> Recibe mensajes tipo "guarda esta peli!" e inmediatamente la pasa a una cola de rabbit mq
+                -> Se lo "da" al frontend.
+
+RECOMENDADOR    -> Analiza la cola de rabbit mq (desp vemos si consume de la cola o no) y en base a eso le pide a MOVIES una pelicula
+
+FRONT-END       -> Ni bien carga le manda un msg a random movies para traer las peliculas
+                -> Ni bien recibe las pelis, le manda un mensaje a historial para que las guarde
+
+
+---
+
+Cada carpeta es su propio proyecto, con su propio node_modules, package_lock, etc.
+Cada carpeta tiene su propia dockerfile ?
+Después vemos lo de las variables de environment.
