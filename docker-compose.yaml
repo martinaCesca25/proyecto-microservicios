@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    #environment:
+    #  MONGO_INITDB_ROOT_USERNAME: root
+    #  MONGO_INITDB_ROOT_PASSWORD: example
+    #volumes:
+    #  - mongo_data:/data/db
+
+  movies:
+    build:
+      context: ./movies
+      dockerfile: Dockerfile
+    container_name: movies_service
+    ports:
+      - "3000:3000"
+    environment:
+      MONGO_URI: mongodb://172.17.0.2:27017
+      COLLECTION_NAME: peliculas
+    depends_on:
+      - mongodb
+
+#volumes:
+#  mongo_data:
+#    driver: local
