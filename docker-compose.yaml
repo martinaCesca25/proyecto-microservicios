@@ -28,3 +28,14 @@ services:
 #volumes:
 #  mongo_data:
 #    driver: local
+
+  random-movies:
+    build:
+      context: ./random-movies
+      dockerfile: Dockerfile
+    container_name: random_movies_service
+    ports:
+      - "3001:3001"
+    depends_on:
+      - movies
+
