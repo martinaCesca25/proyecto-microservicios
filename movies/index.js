@@ -2,7 +2,7 @@ const { MongoClient } = require('mongodb')
 const express = require('express');
 const app = express();
 
-const uri = 'mongodb://127.0.0.1:27017/'
+const uri = 'mongodb://172.18.0.2:27017/'
 const dbName = 'peliculas'
 
 let db
