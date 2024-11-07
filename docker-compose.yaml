@@ -9,8 +9,8 @@ services:
     #environment:
     #  MONGO_INITDB_ROOT_USERNAME: root
     #  MONGO_INITDB_ROOT_PASSWORD: example
-    #volumes:
-    #  - mongo_data:/data/db
+    volumes:
+      - mongo_data:/data/db
 
   movies:
     build:
@@ -25,10 +25,6 @@ services:
     depends_on:
       - mongodb
 
-#volumes:
-#  mongo_data:
-#    driver: local
-
   random-movies:
     build:
       context: ./random-movies
@@ -38,4 +34,8 @@ services:
       - "3001:3001"
     depends_on:
       - movies
+
+volumes:
+  mongo_data:
+    driver: local
 

@@ -14,9 +14,11 @@ app.get("/api/movies", async (req, res) => {
 
   try {
     // Consumimos el microservicio GET /api/random/{n}
-    const response = await axios.get(`http://localhost:3000/api/random/${n}`);
+    const response = await axios.get(`http://movies:3000/api/random/${n}`);
     res.json(response.data);
   } catch (error) {
+    console.log(`[RANDOM-MOVIES] Error:`);
+    console.log(error);
     res.status(500).json({ error: "Error fetching movies." });
   }
 });
