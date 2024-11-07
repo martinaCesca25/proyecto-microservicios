@@ -22,8 +22,8 @@ async function getMovies() {
 app.get("/api/recommend", async (req, res) => {
   // Lista de películas hardcodeada con ObjectId simulados
   const userMovies = [
-    { id: ObjectId("573a1390f29313caabcd4803")},
-    { id: ObjectId("573a1390f29313caabcd42e8")}
+    { _id: ObjectId("573a1390f29313caabcd4803")},
+    { _id: ObjectId("573a1390f29313caabcd42e8")}
   ];
 
   try {
