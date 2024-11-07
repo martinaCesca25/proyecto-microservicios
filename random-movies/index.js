@@ -9,7 +9,7 @@ function getRandomNumber() {
 }
 
 // Lee el archivo JSON y devuelve n películas aleatorias
-app.get("/api/movies", async (req, res) => {
+app.get("/api/random/movies", async (req, res) => {
   const n = getRandomNumber();
 
   try {

@@ -35,6 +35,16 @@ services:
     depends_on:
       - movies
 
+  recomendador:
+    build:
+      context: ./recomendador
+      dockerfile: Dockerfile
+    container_name: recomendador_service
+    ports:
+      - "3002:3002"
+    depends_on:
+      - movies
+
 volumes:
   mongo_data:
     driver: local

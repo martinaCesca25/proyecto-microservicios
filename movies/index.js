@@ -31,6 +31,17 @@ app.get('/api/random/:n', async (req, res) => {
     }
 });
 
+app.get("/api/allmovies", async (req, res) => {
+    try {
+        const peliculasCollection = db.collection('movies');
+        const peliculas = await peliculasCollection.find().toArray(); 
+        res.json(peliculas);
+    } catch (error) {
+        console.error("[MOVIES] Error retrieving all movies:", error);
+        res.status(500).json({ error: "An error occurred while fetching random movies" });
+    }
+  });
+
 app.get('/api/recommend/:criterio', (req, res) => {
     const criterio = req.params.criterio;
     // TEMP
