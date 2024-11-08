@@ -22,8 +22,8 @@ async function getMovies() {
 app.get("/api/recommend", async (req, res) => {
   // Lista de películas hardcodeada con ObjectId simulados
   const userMovies = [
-    { _id: ObjectId("573a1390f29313caabcd4803")},
-    { _id: ObjectId("573a1390f29313caabcd42e8")}
+    {  _id: new ObjectId("573a1390f29313caabcd4803")},
+    {  _id: new ObjectId("573a1390f29313caabcd42e8")}
   ];
 
   try {
@@ -31,7 +31,7 @@ app.get("/api/recommend", async (req, res) => {
 
     // Filtra los géneros solo de las películas en la lista proporcionada por el usuario
     const userGenres = allMovies.filter(movie =>
-      userMovies.some(userMovie => userMovie.id.toString() === movie.id.toString())
+      userMovies.some(userMovie => userMovie._id.toString() === movie._id.toString())
     );
 
     // Cuenta la frecuencia de cada género
@@ -49,7 +49,7 @@ app.get("/api/recommend", async (req, res) => {
 
     // Encuentra una película recomendada en el género predominante
     const recommendations = allMovies.filter(
-      movie => movie.genres.includes(predominantGenre) && !userMovies.some(userMovie => userMovie.id.toString() === movie.id.toString())
+      movie => movie.genres.includes(predominantGenre) && !userMovies.some(userMovie => userMovie._id.toString() === movie._id.toString())
     );
 
     if (recommendations.length > 0) {
@@ -58,7 +58,7 @@ app.get("/api/recommend", async (req, res) => {
     } else {
       // Si no hay recomendaciones para el género predominante, selecciona una película aleatoria
       const remainingMovies = allMovies.filter(
-        movie => !userMovies.some(userMovie => userMovie.id.toString() === movie.id.toString())
+        movie => !userMovies.some(userMovie => userMovie._id.toString() === movie._id.toString())
       );
 
       if (remainingMovies.length > 0) {
