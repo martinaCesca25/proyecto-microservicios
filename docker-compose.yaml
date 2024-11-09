@@ -6,11 +6,23 @@ services:
     container_name: mongodb
     ports:
       - "27017:27017"
-    #environment:
-    #  MONGO_INITDB_ROOT_USERNAME: root
-    #  MONGO_INITDB_ROOT_PASSWORD: example
     volumes:
       - mongo_data:/data/db
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"      # Puerto de RabbitMQ para AMQP
+      - "15672:15672"    # Panel de administración web de RabbitMQ
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   movies:
     build:
@@ -20,10 +32,12 @@ services:
     ports:
       - "3000:3000"
     environment:
-      MONGO_URI: mongodb://172.17.0.2:27017
+      MONGO_URI: mongodb://mongodb:27017
       COLLECTION_NAME: peliculas
+      RABBITMQ_URI: amqp://rabbitmq:5672  # URI para conectar con RabbitMQ
     depends_on:
       - mongodb
+      - rabbitmq
 
   random-movies:
     build:
@@ -32,7 +46,25 @@ services:
     container_name: random_movies_service
     ports:
       - "3001:3001"
+    environment:
+      RABBITMQ_URI: amqp://rabbitmq:5672  # URI para conectar con RabbitMQ
     depends_on:
+      - movies
+      - rabbitmq
+  
+  historial:
+    build:
+      context: ./historial
+      dockerfile: Dockerfile
+    container_name: historial_service
+    ports:
+      - "3003:3003"
+    environment:
+      RABBITMQ_URI: amqp://rabbitmq # Probe con amqp://rabbitmq:5672, amqp://guest:guest@rabbitmq, amqp://guest:guest@rabbitmq:5672 y otros mas 
+      RABBITMQ_PORT: 5672
+    restart: on-failure # https://stackoverflow.com/questions/53031439/connecting-to-rabbitmq-container-with-docker-compose
+    depends_on:
+      - rabbitmq
       - movies
 
   recomendador:
@@ -42,10 +74,12 @@ services:
     container_name: recomendador_service
     ports:
       - "3002:3002"
+    environment:
+      RABBITMQ_URI: amqp://rabbitmq:5672  # URI para conectar con RabbitMQ
     depends_on:
       - movies
+      - rabbitmq
 
 volumes:
   mongo_data:
     driver: local
-
