@@ -24,6 +24,21 @@ services:
       timeout: 5s
       retries: 5
 
+  #movies:
+    #build:
+      #context: ./movies
+      #dockerfile: Dockerfile
+    #container_name: movies_service
+    #ports:
+      #- "3000:3000"
+    #environment:
+      #MONGO_URI: mongodb://mongodb:27017
+      #COLLECTION_NAME: peliculas
+      #RABBITMQ_URI: amqp://rabbitmq:5672  # URI para conectar con RabbitMQ
+    #depends_on:
+      #- mongodb
+      #- rabbitmq
+
   movies:
     build:
       context: ./movies
@@ -33,11 +48,15 @@ services:
       - "3000:3000"
     environment:
       MONGO_URI: mongodb://mongodb:27017
-      COLLECTION_NAME: peliculas
+      DB_NAME: peliculas
+      COLLECTION_NAME: movies
+      JSON_FILE_PATH: /movies.json
       RABBITMQ_URI: amqp://rabbitmq:5672  # URI para conectar con RabbitMQ
     depends_on:
       - mongodb
       - rabbitmq
+    volumes:
+      - ./movies/movies.json:/movies.json
 
   random-movies:
     build:
