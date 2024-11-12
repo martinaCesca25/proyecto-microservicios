@@ -19,6 +19,18 @@ async function getMovies() {
   }
 }
 
+let allMovies = [];
+
+async function initializeMovies() {
+  try {
+    allMovies = await getMovies();
+  } catch (error) {
+    console.error("Error fetching movies:", error);
+  }
+}
+
+initializeMovies();  // Llamar para obtener las películas al inicio
+
 app.get("/api/recommend", async (req, res) => {
   // Lista de películas hardcodeada con ObjectId simulados
   const userMovies = [
@@ -27,7 +39,7 @@ app.get("/api/recommend", async (req, res) => {
   ];
 
   try {
-    const allMovies = await getMovies();
+    //const allMovies = await getMovies();
 
     // Filtra los géneros solo de las películas en la lista proporcionada por el usuario
     const userGenres = allMovies.filter(movie =>
@@ -49,8 +61,8 @@ app.get("/api/recommend", async (req, res) => {
 
     // Encuentra una película recomendada en el género predominante
     const recommendations = allMovies.filter(
-      movie => movie.genres.includes(predominantGenre) && !userMovies.some(userMovie => userMovie._id.toString() === movie._id.toString())
-    );
+      movie => movie.genres && movie.genres.includes(predominantGenre) && !userMovies.some(userMovie => userMovie._id.toString() === movie._id.toString())
+    );    
 
     if (recommendations.length > 0) {
       const recommendedMovie = recommendations[Math.floor(Math.random() * recommendations.length)];
@@ -69,7 +81,7 @@ app.get("/api/recommend", async (req, res) => {
       }
     }
   } catch (error) {
-    res.status(500).json({ error: "Error processing recommendation." });
+    res.status(500).json({ error: "Error processing recommendation." , message: error.message });
   }
 });
 
