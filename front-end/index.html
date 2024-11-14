@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Películas</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="scripts.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>PELÍCULAS!</h1>
+    </header>
+    <main>
+        <section class="gallery">
+            <div class="poster" id="poster-0" onclick="onPosterClick(0)">Esperando a que veas alguna película...</div>
+            <div class="poster" id="poster-1" onclick="onPosterClick(1)">Esperando a que veas alguna película...</div>
+            <div class="poster" id="poster-2" onclick="onPosterClick(2)">Esperando a que veas alguna película...</div>
+            <div class="poster" id="poster-3" onclick="onPosterClick(3)">Esperando a que veas alguna película...</div>
+            <div class="poster" id="poster-4" onclick="onPosterClick(4)">Esperando a que veas alguna película...</div>
+            <div class="poster" id="poster-5" onclick="onPosterClick(5)">Esperando a que veas alguna película...</div>
+            <div class="poster" id="poster-6" onclick="onPosterClick(6)">Esperando a que veas alguna película...</div>
+            <div class="poster" id="poster-7" onclick="onPosterClick(7)">Esperando a que veas alguna película...</div>
+        </section>
+        </section>
+        <aside class="recommendation">
+            <div class="recommended-poster" id="recommended-poster">Cargando...</div>
+            <div class="recommendation-text">
+                <p>Te recomendamos...: <span id="recommended-title">Cargando...</span> En base a tus últimas pelis vistas!</p>
+                <p>Haz click en el poster para verla.</p>
+            </div>
+            <div class="info-text">
+                <p>
+                    El recomendador se carga con peliculas aleatorias. De ahí, podes decidir cuales ver. 
+                    Las podes ver haciendo click. A medida que mires peliculas, el recomendador va a tratar
+                    de recomendarte otra pelicula que creemos que te vaya a gustar. 
+                </p>
+                <p>
+                    Te vamos a recomendar una pelicula cuando miraste la mitad de tus pelis. 
+                </p>
+                <p> 
+                    Por ejemplo, si tenes 8 peliculas cargadas, te recomendaremos una cada 4.
+                </p>
+            </div>
+        </aside>
+    </main>
+</body>
+</html>
