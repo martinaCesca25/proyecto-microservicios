@@ -1,8 +1,15 @@
 const express = require('express');
+const cors = require("cors");
 const amqp = require('amqplib/callback_api');
 
 const app = express();
 app.use(express.json());
+
+app.use(cors({
+    origin: "*",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"]
+}));
 
 const RABBITMQ_URI = process.env.RABBITMQ_URI;
 const QUEUE_NAME = 'peliculas-q';
@@ -43,7 +50,7 @@ function connectToRabbitMQ() {
 connectToRabbitMQ();
 
 // Endpoint para recibir y enviar películas a la cola
-app.post('/api/peliculas', (req, res) => {
+app.post('/api/historial', (req, res) => {
     const pelicula = req.body;
 
     if (!pelicula) {
@@ -56,12 +63,12 @@ app.post('/api/peliculas', (req, res) => {
 
     // Enviar el mensaje a la cola
     channel.sendToQueue(QUEUE_NAME, Buffer.from(msg));
-    console.log(" [MOVIES API] Enviada película a la cola:", pelicula);
+    console.log(" [HISTORIAL] Enviada película a la cola:", pelicula);
 
     res.status(200).json({ message: "Película enviada a la cola", pelicula });
 });
 
 // Iniciar el servidor en el puerto 3000
 app.listen(PORT, () => {
-    console.log(`[MOVIES API] Servidor escuchando en el puerto ${PORT}`);
+    console.log(`[HISTORIAL] Servidor escuchando en el puerto ${PORT}`);
 });
