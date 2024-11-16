@@ -183,16 +183,23 @@ app.get("/api/recommend", async (req, res) => {
     return res.status(400).json({ error: "El historial esta vacío.", error });
   }
   try {
-    // Filtrar los géneros de las películas en la lista proporcionada por el usuario
-    const userGenres = allMovies.filter(movie =>
-      userMovies.some(userMovie => userMovie._id.toString() === movie._id.toString())
-    );
-
     /*Recorrer userMovies y guardar los generos*/
 
     // Contar la frecuencia de cada género
-    const genreCounts = userGenres.reduce((acc, movie) => {
+    /*const genreCounts = userMovies.reduce((acc, movie) => {
       movie.genres.forEach(genre => {
+        acc[genre] = (acc[genre] || 0) + 1;
+      });
+      return acc;
+    }, {});*/
+    
+     // Contar la frecuencia de cada género
+     const genreCounts = userMovies.reduce((acc, movie) => {
+      // Convertir genres a un array si no lo es
+      const genresArray = Array.isArray(movie.genres) ? movie.genres : [movie.genres];
+
+      // Contar la frecuencia de los géneros
+      genresArray.forEach(genre => {
         acc[genre] = (acc[genre] || 0) + 1;
       });
       return acc;
@@ -217,7 +224,7 @@ app.get("/api/recommend", async (req, res) => {
     } else {
       // Si no hay recomendaciones para el género predominante, seleccionar una película aleatoria
       const remainingMovies = allMovies.filter(
-        movie => !userMovies.some(userMovie => userMovie._id.toString() === movie._id.toString())
+        movie => !userMovies.some(userMovie => userMovie.id.toString() === movie._id.toString())
       );
 
       if (remainingMovies.length > 0) {
