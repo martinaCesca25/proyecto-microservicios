@@ -63,6 +63,7 @@ app.post('/api/historial', (req, res) => {
 
     // Enviar el mensaje a la cola
     channel.sendToQueue(QUEUE_NAME, Buffer.from(msg));
+    
     console.log(" [HISTORIAL] Enviada película a la cola:", pelicula);
 
     res.status(200).json({ message: "Película enviada a la cola", pelicula });

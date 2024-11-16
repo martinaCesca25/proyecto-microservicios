@@ -95,6 +95,7 @@ services:
       - "3002:3002"
     environment:
       RABBITMQ_URI: amqp://rabbitmq:5672  # URI para conectar con RabbitMQ
+    restart: on-failure
     depends_on:
       - movies
       - rabbitmq

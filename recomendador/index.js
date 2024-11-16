@@ -105,6 +105,16 @@ app.use(express.json());
 let allMovies = [];
 let userMovies = [];
 
+/*
+  userMovies:
+    {
+      id: ObjectID,
+      title: string,
+      genres: string[],
+      poster: string
+    }[]
+*/
+
 // Función para obtener todas las películas desde el microservicio
 async function getMovies() {
   try {
@@ -145,14 +155,15 @@ function connectToRabbitMQ() {
       channel.consume(
         QUEUE_NAME,
         (msg) => {
+          console.log("[RECOMMENDER SERVICE] Recibí algo.");
           if (msg !== null) {
             const pelicula = JSON.parse(msg.content.toString());
             console.log("[RECOMMENDER SERVICE] Película recibida:", pelicula);
 
             // Agregar la película recibida a la lista userMovies
-            if (pelicula._id) {
-              userMovies.push({ _id: new ObjectId(pelicula._id) });
-              console.log("[RECOMMENDER SERVICE] Película agregada a userMovies:", pelicula._id);
+            if (pelicula.id) {
+              userMovies.push(pelicula);
+              console.log("[RECOMMENDER SERVICE] Película agregada a userMovies:", pelicula.id);
             }
           }
         },
@@ -167,14 +178,17 @@ connectToRabbitMQ();
 // Endpoint para recomendar películas
 app.get("/api/recommend", async (req, res) => {
 
-  if (!userMovies || !Array.isArray(userMovies) || userMovies.length === 0) {
-    return res.status(400).json({ error: "El historial esta vacío." });
+  if (userMovies.length === 0) {
+    console.log(userMovies);
+    return res.status(400).json({ error: "El historial esta vacío.", error });
   }
   try {
     // Filtrar los géneros de las películas en la lista proporcionada por el usuario
     const userGenres = allMovies.filter(movie =>
       userMovies.some(userMovie => userMovie._id.toString() === movie._id.toString())
     );
+
+    /*Recorrer userMovies y guardar los generos*/
 
     // Contar la frecuencia de cada género
     const genreCounts = userGenres.reduce((acc, movie) => {
@@ -194,7 +208,7 @@ app.get("/api/recommend", async (req, res) => {
       movie =>
         movie.genres &&
         movie.genres.includes(predominantGenre) &&
-        !userMovies.some(userMovie => userMovie._id.toString() === movie._id.toString())
+        !userMovies.some(userMovie => userMovie.id.toString() === movie._id.toString()) /*zona de error posible!*/
     );
 
     if (recommendations.length > 0) {

@@ -34,9 +34,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (index < posters.length) {
                 posters[index].innerHTML = `<img src="${movie.poster}" alt="Poster de ${movie.title}" style="width: 100%; height: 100%; border-radius: 8px;">`;
                 movies_shown[index] = {
-                    id: movie.id,
+                    id: movie._id,
                     title: movie.title,
-                    genre: movie.genre,
+                    genres: movie.genres[0],
                     poster: movie.poster
                 }
             }
