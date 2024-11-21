@@ -24,21 +24,6 @@ services:
       timeout: 5s
       retries: 5
 
-  #movies:
-    #build:
-      #context: ./movies
-      #dockerfile: Dockerfile
-    #container_name: movies_service
-    #ports:
-      #- "3000:3000"
-    #environment:
-      #MONGO_URI: mongodb://mongodb:27017
-      #COLLECTION_NAME: peliculas
-      #RABBITMQ_URI: amqp://rabbitmq:5672  # URI para conectar con RabbitMQ
-    #depends_on:
-      #- mongodb
-      #- rabbitmq
-
   movies:
     build:
       context: ./movies
@@ -79,7 +64,7 @@ services:
     ports:
       - "3003:3003"
     environment:
-      RABBITMQ_URI: amqp://rabbitmq # Probe con amqp://rabbitmq:5672, amqp://guest:guest@rabbitmq, amqp://guest:guest@rabbitmq:5672 y otros mas 
+      RABBITMQ_URI: amqp://rabbitmq 
       RABBITMQ_PORT: 5672
     restart: on-failure # https://stackoverflow.com/questions/53031439/connecting-to-rabbitmq-container-with-docker-compose
     depends_on:
@@ -99,6 +84,22 @@ services:
     depends_on:
       - movies
       - rabbitmq
+
+  front-end:
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile
+    container_name: front_end_service
+    ports:
+      - "8000:8000"
+    environment:
+      RANDOM_MOVIES_URL: 'http://random_movies_service:3001/api/random/movies'
+      HISTORIAL_URL: 'http://historial_service:3003/api/historial'
+      RECOMMENDATION_URL: 'http://recomendador_service:3002/api/recommend'
+    depends_on:
+      - movies
+      - recomendador
+      - random-movies
 
 volumes:
   mongo_data:

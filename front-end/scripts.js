@@ -13,15 +13,17 @@ for(let i = 0; i < MAX_MOVIES; i++) {
         id: 0,
         title: '',
         genre: '',
-        poster: ''
+        poster: '',
+        plot: ''
     });
 }
 
 let last_recommendation = {
-    id: 0,
+    id: -1,
     title: '',
     genre: '',
-    poster: ''
+    poster: '',
+    plot: ''
 }
 
 let recommendation_watched = false;
@@ -47,7 +49,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                     id: movie._id,
                     title: movie.title,
                     genres: movie.genres[0],
-                    poster: movie.poster
+                    poster: movie.poster,
+                    plot: movie.plot
                 }
             }
         });
@@ -73,6 +76,9 @@ async function onPosterClick(index) {
         return;
 
     console.log(`Tiene película.`);
+
+    const movie = movies_shown[index];
+    mostrarResumen(movie);
 
     try {
         await enviarAlHistorial(index);
@@ -172,7 +178,8 @@ async function onRecommendedPosterClick() {
         id: last_recommendation.id,
         title: recommendedTitle,
         genres: last_recommendation.genre,
-        poster: recommendedPoster.src
+        poster: recommendedPoster.src,
+        plot: last_recommendation.plot
     };
 
     // Añadir la película al primer espacio vacío o reemplazar cíclicamente
@@ -192,3 +199,22 @@ async function onRecommendedPosterClick() {
         console.error("Error al agregar la recomendación al historial:", error);
     }
 }
+
+function mostrarResumen(movie) {
+    const summarySection = document.getElementById("movie-summary");
+    const titleElement = document.getElementById("summary-title");
+    const plotElement = document.getElementById("summary-plot");
+
+    // Actualizar contenido
+    titleElement.textContent = movie.title || "Título no disponible";
+    plotElement.textContent = movie.plot || "Trama no disponible";
+
+    // Mostrar la sección
+    summarySection.classList.add("visible");
+}
+
+// Cerrar el resumen
+document.getElementById("close-summary").addEventListener("click", () => {
+    const summarySection = document.getElementById("movie-summary");
+    summarySection.style.display = "none";
+});

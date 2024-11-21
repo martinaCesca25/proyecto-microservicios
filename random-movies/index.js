@@ -1,8 +1,15 @@
 const express = require("express");
+const cors = require("cors");
 const axios = require("axios");
 
 const app = express();
 const PORT = 3001;
+
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type"]
+}));
 
 function getRandomNumber() {
   return Math.floor(Math.random() * 10) + 1; // Número aleatorio entre 1 y 10
